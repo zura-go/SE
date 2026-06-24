@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>იმს-ს ფაკულტეტი — Software Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0F172A;
+    --navy-mid: #1E293B;
+    --navy-light: #334155;
+    --violet: #7C3AED;
+    --violet-light: #A78BFA;
+    --violet-glow: rgba(124,58,237,0.18);
+    --lemon: #FACC15;
+    --lemon-dim: rgba(250,204,21,0.15);
+    --white: #F8FAFC;
+    --muted: #94A3B8;
+    --border: rgba(148,163,184,0.15);
+    --card: rgba(30,41,59,0.7);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(124,58,237,0.22) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    color: var(--violet-light);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.6rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 span {
+    color: var(--lemon);
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.65;
+  }
+
+  /* Terminal */
+  .terminal {
+    background: #0D1117;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    text-align: left;
+    min-width: 360px;
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    position: relative;
+  }
+
+  .terminal-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 0.9rem;
+  }
+
+  .terminal-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .terminal-dot:nth-child(1) { background: #FF5F57; }
+  .terminal-dot:nth-child(2) { background: #FEBC2E; }
+  .terminal-dot:nth-child(3) { background: #28C840; }
+
+  .terminal-line { margin-bottom: 0.35rem; }
+  .terminal-line .prompt { color: var(--violet-light); }
+  .terminal-line .cmd { color: var(--white); }
+  .terminal-line .out { color: #4ADE80; }
+  .terminal-line .comment { color: var(--muted); }
+
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--lemon);
+    vertical-align: -2px;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .scroll-hint {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: float 2.5s ease-in-out infinite;
+  }
+
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+  /* ── NAV ── */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,23,42,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+  }
+
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-inner::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .nav-tab:hover { color: var(--white); }
+  .nav-tab.active { color: var(--lemon); border-bottom-color: var(--lemon); }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+  .section.visible { display: block; }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--violet-light);
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .section-title em {
+    font-style: normal;
+    color: var(--lemon);
+  }
+
+  .section-intro {
+    color: var(--muted);
+    max-width: 620px;
+    margin-bottom: 3rem;
+    font-size: 1.05rem;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--violet);
+    transform: translateY(-3px);
+  }
+
+  .card-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--white);
+  }
+
+  .card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── BIG QUOTE ── */
+  .big-q {
+    border-left: 3px solid var(--violet);
+    padding: 1.5rem 1.8rem;
+    background: var(--violet-glow);
+    border-radius: 0 12px 12px 0;
+    margin: 2.5rem 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--white);
+  }
+
+  /* ── TRADEOFFS ── */
+  .tradeoff-list { display: flex; flex-direction: column; gap: 1rem; }
+
+  .tradeoff {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+
+  .tradeoff-vs {
+    background: var(--lemon-dim);
+    color: var(--lemon);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .tradeoff-text strong {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .tradeoff-text p { font-size: 0.87rem; color: var(--muted); }
+
+  /* ── COURSES ── */
+  .course-block { margin-bottom: 2.5rem; }
+
+  .course-block h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--violet-light);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.82rem;
+  }
+
+  .course-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.2rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    margin-bottom: 0.6rem;
+    transition: border-color 0.2s;
+  }
+
+  .course-row:hover { border-color: var(--violet); }
+
+  .course-hours {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--lemon);
+    min-width: 52px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .course-name {
+    font-size: 0.93rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+  }
+
+  .course-tag {
+    margin-left: auto;
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .tag-core { background: rgba(124,58,237,0.25); color: var(--violet-light); }
+  .tag-cap  { background: rgba(250,204,21,0.15); color: var(--lemon); }
+
+  /* ── CAREER ── */
+  .career-path {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .career-path::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--violet), var(--lemon));
+    border-radius: 2px;
+  }
+
+  .career-step {
+    position: relative;
+    padding: 1.2rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s;
+  }
+
+  .career-step:hover { border-color: var(--violet); }
+
+  .career-step::before {
+    content: '';
+    position: absolute;
+    left: -1.7rem;
+    top: 1.45rem;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--violet);
+    border: 2px solid var(--navy);
+    box-shadow: 0 0 0 3px var(--violet-glow);
+  }
+
+  .career-step:last-child::before { background: var(--lemon); box-shadow: 0 0 0 3px var(--lemon-dim); }
+
+  .career-level {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .career-step h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .career-step p { font-size: 0.88rem; color: var(--muted); }
+
+  /* ── TOOLS ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .tool-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: border-color 0.2s;
+  }
+
+  .tool-item:hover { border-color: var(--violet); }
+
+  .tool-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-required { background: var(--lemon); }
+  .dot-rec { background: var(--violet-light); }
+
+  .tool-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .tool-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 0.1rem;
+  }
+
+  /* ── ASSESSMENT ── */
+  .assess-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .assess-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+  }
+
+  .assess-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 0.93rem;
+  }
+
+  .assess-format {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .assess-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--lemon);
+    min-width: 42px;
+    text-align: right;
+  }
+
+  .ai-note {
+    margin-top: 2rem;
+    background: var(--violet-glow);
+    border: 1px solid rgba(124,58,237,0.35);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .ai-note strong { color: var(--violet-light); }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  footer span { color: var(--violet-light); }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 2.4rem; }
+    .terminal { min-width: unset; width: 100%; }
+    .assess-row { grid-template-columns: 1fr auto; }
+    .assess-format { display: none; }
+    .career-path { padding-left: 1.5rem; }
+    .career-step { padding: 1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+    .scroll-hint { animation: none; }
+    .card:hover, .course-row:hover, .tool-item:hover, .career-step:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <p class="hero-eyebrow">ინფორმატიკისა და მართვის სისტემების ფაკულტეტი · 2026</p>
+  <h1>გახდი ის, ვინც<br><span>ააშენებს ხვალინდელს</span></h1>
+  <p class="hero-sub">Software Engineering — ეს არ არის მხოლოდ კოდის წერა. <br>ეს არის სისტემების შექმნა, რომლებიც <br>ათასობით ადამიანის ცხოვრებას ყოველდღე ეხება.</p>
+
+  <div class="terminal" aria-label="ტერმინალის სიმულაცია">
+    <div class="terminal-bar">
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+    </div>
+    <div class="terminal-line"><span class="prompt">~/project $ </span><span class="cmd" id="typed-cmd"></span><span class="cursor" id="cursor"></span></div>
+    <div class="terminal-line" id="term-out-1" style="opacity:0"><span class="out">✓ tests passed (127/127)</span></div>
+    <div class="terminal-line" id="term-out-2" style="opacity:0"><span class="out">✓ build successful</span></div>
+    <div class="terminal-line" id="term-out-3" style="opacity:0"><span class="comment"># შენი კოდი ახლა პროგრამულ პროდუქტშია, <br># ხოლო ეგ შენი პროდუქტი - მომხმარებელთანაა! 🚀</span></div>
+  </div>
+
+  <div class="scroll-hint">↓ გადაახვიე ქვემოთ ...</div>
+</section>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="sticky-nav" role="navigation" aria-label="სექციების ნავიგაცია">
+  <div class="nav-inner">
+    <button class="nav-tab active" onclick="showSection('who')">ვინ ვარ?</button>
+    <button class="nav-tab" onclick="showSection('learn')">ვისწავლი?</button>
+    <button class="nav-tab" onclick="showSection('work')">სად ვიმუშავებ?</button>
+    <button class="nav-tab" onclick="showSection('tools')">ინსტრუმენტები</button>
+    <button class="nav-tab" onclick="showSection('assess')">შეფასება</button>
+  </div>
+</nav>
+
+<!-- ═══════════ SECTION: ვინ ვარ ═══════════ -->
+<div class="section visible" id="sec-who">
+  <p class="section-label">01 · იდენტობა</p>
+  <h2 class="section-title">Software Engineer —<br>ის, ვინც <em>ქმნის</em></h2>
+  <p class="section-intro">Software Engineer ქმნის პროგრამულ სისტემებს — ისეთებს, რომლებიც <br>არა მხოლოდ მუშაობს, არამედ ხარისხსაც ინარჩუნებს და იზრდება.</p>
+
+  <div class="big-q">
+    «როგორ ავაშენოთ სისტემა ისე, რომ მომხმარებელი კმაყოფილი დარჩეს, <br>კოდი სხვა პროგრამისტმაც გაიგოს, და ხვალ — ვითარდებოდეს?»
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <span class="card-icon">🏗️</span>
+      <h3>აშენებ და ინარჩუნებ</h3>
+      <p>ყოველდღიურად იღებ ინჟინრულ გადაწყვეტილებებს, სადაც სრულყოფილი პასუხი ყოველთვის არ არსებობს.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🤝</span>
+      <h3>მუშაობ გუნდში</h3>
+      <p>კოდი ერთობლივი პასუხისმგებლობაა. <br>Code Review, PR-ები, Agile <br>— ეს SE-ის კულტურაა.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔭</span>
+      <h3>ფიქრობ კონტექსტით</h3>
+      <p>ერთი და იგივე გადაწყვეტილება სხვადასხვა პროექტში სხვადასხვა პასუხისმგებლობაზე გადის.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">⚖️</span>
+      <h3>აბალანსებ კომპრომისებს</h3>
+      <p>სიჩქარე ↔ ხარისხი. <br>სიმარტივე ↔ მოქნილობა. <br>ეს SE-ის ნამდვილი გამოწვევაა.</p>
+    </div>
+  </div>
+
+  <p class="section-label" style="margin-top:3rem;">რეალური კომპრომისები</p>
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:600;margin-bottom:1.5rem;">SE-ს ყოველდღიური გადასაჭრელი</h3>
+  <div class="tradeoff-list">
+    <div class="tradeoff">
+      <div class="tradeoff-vs">სიჩქარე ↔ ხარისხი</div>
+      <div class="tradeoff-text">
+        <strong>«გამოუშვი სწრაფად» vs «გამოუშვი სწორად»</strong>
+        <p>ბაზარი სიჩქარეს ითხოვს. სწრაფი გამოშვება ხარისხობრივ დავალიანებას ტოვებს, რომელიც შემდეგ ორმაგი ძალისხმევით სწორდება.</p>
+      </div>
+    </div>
+    <div class="tradeoff">
+      <div class="tradeoff-vs">სიმარტივე ↔ მოქნილობა</div>
+      <div class="tradeoff-text">
+        <strong>მარტივი სისტემა vs ყველაფრისთვის მზა სისტემა</strong>
+        <p>მარტივი — ადვილად გასაგებია, ახალ მოთხოვნებს ვერ ეგუება. მოქნილი — ყველაფერს ეგუება, მაგრამ რთულია.</p>
+      </div>
+    </div>
+    <div class="tradeoff">
+      <div class="tradeoff-vs">ახლა ↔ მომავალი</div>
+      <div class="tradeoff-text">
+        <strong>«ახლა გამოვიდეს» vs «მომავალში გაფართოვდეს»</strong>
+        <p>ვინც ყოველთვის «მომავლისთვის» წერს — ნელია. ვინც მხოლოდ «ახლანდელისთვის» — მოვალეა.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION: ვისწავლი ═══════════ -->
+<div class="section" id="sec-learn">
+  <p class="section-label">02 · კურიკულუმი</p>
+  <h2 class="section-title">რას <em>ვისწავლი?</em></h2>
+  <p class="section-intro">კურსები ლოგიკური ჯაჭვით ერთმანეთს ემყარება — <br>ფუნდამენტიდან სპეციალიზებამდე, კაფსტოუნ პროექტამდე.</p>
+
+  <div class="course-block">
+    <h3>📐 ფუნდამენტური საგნები</h3>
+    <div class="course-row">
+      <span class="course-hours">120 სთ</span>
+      <span class="course-name">ალგორითმები და მონაცემთა სტრუქტურები</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">120 სთ</span>
+      <span class="course-name">პროგრამირების საფუძვლები</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">120 სთ</span>
+      <span class="course-name">გამოთვლითი და დისკრეტული მათემატიკა</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">90 სთ</span>
+      <span class="course-name">ოპერაციული სისტემები</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">90 სთ</span>
+      <span class="course-name">მონაცემთა ბაზების საფუძვლები</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">75 სთ</span>
+      <span class="course-name">ქსელების საფუძვლები</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:rgba(124,58,237,0.5);display:inline-block;"></span>ძირეული კურსი</div>
+    <div class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:rgba(250,204,21,0.4);display:inline-block;"></span>კაფსტოუნი</div>
+  </div>
+
+  <div class="course-block">
+    <h3>🚀 სპეციალიზებული კურსები</h3>
+    <div class="course-row">
+      <span class="course-hours">120 სთ</span>
+      <span class="course-name">პროგრამული არქიტექტურა</span>
+      <span class="course-tag tag-core">ძირეული</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">90 სთ</span>
+      <span class="course-name">Design Patterns</span>
+      <span class="course-tag tag-core">ძირეული</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">90 სთ</span>
+      <span class="course-name">პროგრამის ხარისხი და ტესტირება</span>
+      <span class="course-tag tag-core">ძირეული</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">90 სთ</span>
+      <span class="course-name">მონაცემთა ბაზების სისტემები</span>
+      <span class="course-tag tag-core">ძირეული</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">90 სთ</span>
+      <span class="course-name">განაწილებული სისტემები</span>
+      <span class="course-tag tag-core">ძირეული</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">120 სთ</span>
+      <span class="course-name">SE-ის პრაქტიკა — Agile, CI/CD, Code Review</span>
+      <span class="course-tag tag-core">ძირეული</span>
+    </div>
+    <div class="course-row">
+      <span class="course-hours">150 სთ</span>
+      <span class="course-name">კაფსტოუნ პროექტი — რეალური სისტემის სრული ციკლი</span>
+      <span class="course-tag tag-cap">კაფსტოუნი</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION: სად ვიმუშავებ ═══════════ -->
+<div class="section" id="sec-work">
+  <p class="section-label">03 · კარიერა</p>
+  <h2 class="section-title">სად <em>ვიმუშავებ?</em></h2>
+  <p class="section-intro">SE ყველაზე ჰორიზონტალური სპეციალიზაციაა — <br>პრაქტიკულად ნებისმიერი კომპანია, <br>რომელსაც ციფრული პროდუქტი აქვს.</p>
+
+  <div class="card-grid" style="margin-bottom:3rem;">
+    <div class="card">
+      <span class="card-icon">🏦</span>
+      <h3>Fintech</h3>
+      <p>კოდის ხარისხი = ფინანსური სანდოობა. ყველა ტრანზაქცია შენს კოდზე გადის.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏥</span>
+      <h3>HealthTech</h3>
+      <p>კოდის ხარისხი = პაციენტის უსაფრთხოება. პასუხისმგებლობა ყველაზე მაღალია.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🌐</span>
+      <h3>ნებისმიერი სფერო</h3>
+      <p>Startup-ი, Enterprise, სახელმწიფო სექტორი — ყველას Software Engineer სჭირდება.</p>
+    </div>
+  </div>
+
+  <p class="section-label">კარიერული ბილიკი</p>
+  <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:600;margin-bottom:1.8rem;">Junior-დან Staff Engineer-მდე</h3>
+
+  <div class="career-path">
+    <div class="career-step">
+      <div class="career-level">Entry · 0–2 წელი</div>
+      <h3>Junior Software Engineer</h3>
+      <p>მზა ამოცანების განხორციელება, Code Review-ში მონაწილეობა, ძირეული უნარების გამყარება.</p>
+    </div>
+    <div class="career-step">
+      <div class="career-level">Mid · 3–6 წელი</div>
+      <h3>Software Engineer</h3>
+      <p>დამოუკიდებელი ფუნქციების შემუშავება, Junior ინჟინრების მენტორობა.</p>
+    </div>
+    <div class="career-step">
+      <div class="career-level">Senior · 7+ წელი</div>
+      <h3>Senior / Staff Engineer</h3>
+      <p>არქიტექტურული გადაწყვეტილებები. ან — Engineering Manager: გუნდების ლიდერობა.</p>
+    </div>
+  </div>
+
+  <div class="big-q" style="margin-top:2.5rem;">
+    AI-ის კონტექსტში მარტივი კოდის წერა სულ უფრო ავტომატიზირდება — <strong>სიღრმე, არქიტექტურა და სისტემური განსჯა კი წინა პლანზე გამოდის.</strong>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION: ინსტრუმენტები ═══════════ -->
+<div class="section" id="sec-tools">
+  <p class="section-label">04 · ტექნოლოგიები</p>
+  <h2 class="section-title">რითი <em>ვიმუშავებ?</em></h2>
+  <p class="section-intro">სავალდებულო ინსტრუმენტები — ყველას უნდა დაეუფლო. <br>რეკომენდებულები — უნარების გასაღრმავებლად.</p>
+
+  <div class="legend">
+    <div class="legend-item"><span class="tool-dot dot-required" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span>სავალდებულო</div>
+    <div class="legend-item"><span class="tool-dot dot-rec" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span>რეკომენდებული</div>
+  </div>
+
+  <div class="tools-grid">
+    <div class="tool-item">
+      <span class="tool-dot dot-required"></span>
+      <div><div class="tool-name">Python / Java / C++</div><div class="tool-desc">ძირეული სასწავლო ენა</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-required"></span>
+      <div><div class="tool-name">Git / GitHub</div><div class="tool-desc">ვერსიების კონტროლი</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-required"></span>
+      <div><div class="tool-name">SQL</div><div class="tool-desc">მონაცემთა ბაზები</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-required"></span>
+      <div><div class="tool-name">Docker</div><div class="tool-desc">კონტეინერიზაცია</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-required"></span>
+      <div><div class="tool-name">pytest / JUnit</div><div class="tool-desc">ავტომატური ტესტირება</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-required"></span>
+      <div><div class="tool-name">GitHub Actions</div><div class="tool-desc">CI/CD pipeline</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-required"></span>
+      <div><div class="tool-name">AI Coding Tools</div><div class="tool-desc">Cursor, Claude Code...</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-rec"></span>
+      <div><div class="tool-name">Kubernetes</div><div class="tool-desc">კონტეინერების ორკესტრაცია</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-rec"></span>
+      <div><div class="tool-name">TypeScript</div><div class="tool-desc">Frontend / Full Stack</div></div>
+    </div>
+    <div class="tool-item">
+      <span class="tool-dot dot-rec"></span>
+      <div><div class="tool-name">Redis</div><div class="tool-desc">Cache, სესიების მართვა</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION: შეფასება ═══════════ -->
+<div class="section" id="sec-assess">
+  <p class="section-label">05 · შეფასება</p>
+  <h2 class="section-title">როგორ <em>შემაფასებენ?</em></h2>
+  <p class="section-intro">შეფასება ასახავს რეალურ SE-ის სამუშაოს — <br>პროექტი, კოლაბორაცია, გადაწყვეტილებების დასაბუთება.</p>
+
+  <div class="assess-grid">
+    <div class="assess-row">
+      <div class="assess-name">კაფსტოუნ პროექტი</div>
+      <div class="assess-format">გუნდური · სემესტრული</div>
+      <div class="assess-pct">40%</div>
+    </div>
+    <div class="assess-row">
+      <div class="assess-name">Code Review — კოლეგის კოდის ანალიზი</div>
+      <div class="assess-format">ყოველ 2 კვირაში</div>
+      <div class="assess-pct">20%</div>
+    </div>
+    <div class="assess-row">
+      <div class="assess-name">სისტემის დიზაინის დაცვა</div>
+      <div class="assess-format">ინდივიდუალურად · 30 წთ</div>
+      <div class="assess-pct">20%</div>
+    </div>
+    <div class="assess-row">
+      <div class="assess-name">Git პროცესი — commits, PR-ები, CI/CD</div>
+      <div class="assess-format">ავტომატურად + ხელით</div>
+      <div class="assess-pct">10%</div>
+    </div>
+    <div class="assess-row">
+      <div class="assess-name">ტექნიკური პრეზენტაცია</div>
+      <div class="assess-format">ინდივიდუალური</div>
+      <div class="assess-pct">10%</div>
+    </div>
+  </div>
+
+  <div class="ai-note">
+    <strong>AI-ის გამოყენებაზე:</strong> AI-assisted კოდი აკრძალული <em>არ არის</em> — ეფექტურად გამოყენება დღევანდელ სინამდვილეს ასახავს. მაგრამ Code Review-სა და სისტემის დიზაინის დაცვაზე მოგეკითხება: <strong>«ეს კოდი რატომ ასეა დაწერილი?»</strong> — ამ კითხვაზე პასუხი AI-სგან ვერ მიიღება.
+  </div>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <span></span>IT · სპეციალიზაცია Software Engineering · 2026
+</footer>
+
+<script>
+  // ── Terminal typewriter ──
+  const commands = [
+    { cmd: 'git commit -m "feat: add payment module"', delay: 60 },
+  ];
+  let cmdIndex = 0, charIndex = 0;
+  const typedEl = document.getElementById('typed-cmd');
+  const cursorEl = document.getElementById('cursor');
+
+  function typeChar() {
+    const cmd = commands[cmdIndex].cmd;
+    if (charIndex < cmd.length) {
+      typedEl.textContent += cmd[charIndex];
+      charIndex++;
+      setTimeout(typeChar, commands[cmdIndex].delay);
+    } else {
+      cursorEl.style.display = 'none';
+      setTimeout(showOutputs, 400);
+    }
+  }
+
+  function showOutputs() {
+    ['term-out-1','term-out-2','term-out-3'].forEach((id, i) => {
+      setTimeout(() => {
+        document.getElementById(id).style.opacity = '1';
+        document.getElementById(id).style.transition = 'opacity 0.4s';
+      }, i * 500);
+    });
+  }
+
+  setTimeout(typeChar, 800);
+
+  // ── Tab switching ──
+  const sections = { who:'sec-who', learn:'sec-learn', work:'sec-work', tools:'sec-tools', assess:'sec-assess' };
+
+  function showSection(key) {
+    Object.values(sections).forEach(id => document.getElementById(id).classList.remove('visible'));
+    document.getElementById(sections[key]).classList.add('visible');
+    document.querySelectorAll('.nav-tab').forEach((tab, i) => {
+      tab.classList.toggle('active', Object.keys(sections)[i] === key);
+    });
+    document.querySelector('.sticky-nav').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+</body>
+</html>

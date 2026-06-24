@@ -135,7 +135,7 @@
 
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* ═══════════ სუპერ ცოცხალი და ანიმირებული ღილაკი ═══════════ */
+  /* ── ანიმირებული ღილაკი ── */
   .explore-btn {
     background: linear-gradient(135deg, var(--violet) 0%, #6D28D9 100%);
     color: var(--white);
@@ -150,13 +150,11 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    /* მრავალშრიანი ნეონის პულსაციის ეფექტი */
     animation: 
       buttonPulse 2.5s infinite ease-in-out,
       textGlow 3s infinite ease-in-out;
   }
 
-  /* მიახლოების და დაჭერის მიკრო-ეფექტები */
   .explore-btn:hover {
     transform: translateY(-3px) scale(1.03);
     border-color: var(--violet-light);
@@ -167,7 +165,6 @@
     transform: translateY(-1px) scale(0.99);
   }
 
-  /* მბზინავი Shimmer ეფექტის ფენა */
   .explore-btn::before {
     content: '';
     position: absolute;
@@ -185,26 +182,17 @@
     animation: shimmerEffect 4.5s infinite linear;
   }
 
-  /* პულსაციის კოდი */
   @keyframes buttonPulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.5), 0 0 0 0 rgba(167, 139, 250, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 0 15px rgba(124, 58, 237, 0), 0 0 0 25px rgba(167, 139, 250, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(124, 58, 237, 0), 0 0 0 0 rgba(167, 139, 250, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.5), 0 0 0 0 rgba(167, 139, 250, 0.3); }
+    50% { box-shadow: 0 0 0 15px rgba(124, 58, 237, 0), 0 0 0 25px rgba(167, 139, 250, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0), 0 0 0 0 rgba(167, 139, 250, 0); }
   }
 
-  /* სინათლის გადარბენის კოდი */
   @keyframes shimmerEffect {
     0% { left: -150%; }
     25%, 100% { left: 150%; }
   }
 
-  /* ტექსტის სუნთქვის კოდი */
   @keyframes textGlow {
     0%, 100% { color: rgba(248, 250, 252, 0.9); text-shadow: 0 0 2px rgba(255,255,255,0.3); }
     50% { color: rgba(255, 255, 255, 1); text-shadow: 0 0 8px rgba(255,255,255,0.6); }
@@ -374,8 +362,23 @@
   footer { border-top: 1px solid var(--border); padding: 2rem 1rem; text-align: center; color: var(--muted); font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; line-height: 1.5; }
   footer span { color: var(--violet-light); display: block; margin-bottom: 0.2rem; }
 
-  /* ── მობილურის ოპტიმიზაციები ── */
+  /* ── მობილურის ოპტიმიზაციები და გადაფარვის გასწორება ── */
   @media (max-width: 640px) {
+    /* ხარვეზის გასწორება: მობილურ ვერსიაზე კონტენტის ჩარჩოს ვუხსნით ფიქსირებულ სიმაღლეს,
+       რათა მან არ დაიკავოს მეორე ეკრანის ადგილი გვერდის ჩატვირთვისთანავე და არ გადაეფაროს ღილაკს */
+    .content-frame {
+      height: auto;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: visible;
+    }
+    
+    /* კონტენტის შიდა არეალსაც ვუხსნით შიდა სქროლს, რადგან ის უკვე გლობალურად ჩავა ქვემოთ */
+    .tab-scroll-viewport {
+      overflow-y: visible;
+      flex: none;
+    }
+
     .sticky-nav { padding: 0.5rem; }
     .nav-inner { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
     .nav-tab { padding: 0.6rem 0.5rem; font-size: 0.82rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(30, 41, 59, 0.4); }
@@ -598,6 +601,7 @@
   // ── ტაბების გადართვის ლოგიკა ──
   const nodes = { who: 'node-who', learn: 'node-learn', work: 'node-work', tools: 'node-tools', assess: 'node-assess' };
   const internalContainer = document.getElementById('tab-internal-viewport');
+  const globalScroller = document.getElementById('global-scroller');
 
   function showSection(key) {
     Object.values(nodes).forEach(id => document.getElementById(id).classList.remove('active-node'));
@@ -607,11 +611,18 @@
       tab.classList.toggle('active', Object.keys(nodes)[i] === key);
     });
 
-    internalContainer.scrollTop = 0;
+    // თუ მობილურ ეკრანზე ვართ, სქროლი მთლიან ფანჯარაზე სწორდება, ხოლო კომპიუტერზე - შიდა კონტეინერში
+    if (window.innerWidth <= 640) {
+      const navBar = document.getElementById('main-navigation');
+      globalScroller.scrollTop = navBar.offsetTop;
+    } else {
+      internalContainer.scrollTop = 0;
+    }
   }
 
   function navigateToMenu() {
-    document.getElementById('info-frame').scrollIntoView({ behavior: 'smooth' });
+    const navBar = document.getElementById('main-navigation');
+    globalScroller.scrollTo({ top: navBar.offsetTop, behavior: 'smooth' });
   }
 </script>
 </body>

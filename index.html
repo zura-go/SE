@@ -24,6 +24,7 @@
     --card: rgba(30,41,59,0.7);
   }
 
+  /* დესკტოპზე ვტოვებთ ფიქსირებულ არქიტექტურას, ხოლო მობილურზე CSS-ით სრულად გადავაწყობთ */
   html, body {
     height: 100%;
     overflow: hidden;
@@ -211,6 +212,9 @@
 
   /* ── NAV ── */
   .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     background: rgba(15,23,42,0.98);
     border-bottom: 1px solid var(--border);
     padding: 0 1rem;
@@ -362,27 +366,47 @@
   footer { border-top: 1px solid var(--border); padding: 2rem 1rem; text-align: center; color: var(--muted); font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; line-height: 1.5; }
   footer span { color: var(--violet-light); display: block; margin-bottom: 0.2rem; }
 
-  /* ── მობილურის ოპტიმიზაციები და გადაფარვის გასწორება ── */
+  /* ═══════════ მობილურის ოპტიმიზაციები (აბსოლუტური გარანტია) ═══════════ */
   @media (max-width: 640px) {
-    /* ხარვეზის გასწორება: მობილურ ვერსიაზე კონტენტის ჩარჩოს ვუხსნით ფიქსირებულ სიმაღლეს,
-       რათა მან არ დაიკავოს მეორე ეკრანის ადგილი გვერდის ჩატვირთვისთანავე და არ გადაეფაროს ღილაკს */
+    /* ძირეული ცვლილება: მობილურზე ვხსნით Window-ს სქროლის აკრძალვას, რათა გვერდმა ჩვეულებრივად იაროს ქვემოთ */
+    html, body {
+      overflow: auto;
+      height: auto;
+    }
+    
+    .viewport-wrapper {
+      height: auto;
+      overflow-y: visible;
+    }
+
+    /* Hero სექცია მობილურზე იკავებს სუფთა 100%-ს, ხოლო Content Frame ჯდება მის ქვემოთ, ყოველგვარი გადაფარვის გარეშე */
+    .hero {
+      height: 100vh;
+      height: 100dvh;
+    }
+
     .content-frame {
       height: auto;
-      min-height: 100vh;
-      min-height: 100dvh;
       overflow: visible;
     }
     
-    /* კონტენტის შიდა არეალსაც ვუხსნით შიდა სქროლს, რადგან ის უკვე გლობალურად ჩავა ქვემოთ */
     .tab-scroll-viewport {
       overflow-y: visible;
       flex: none;
+      padding: 2rem 1rem 3rem;
     }
 
-    .sticky-nav { padding: 0.5rem; }
+    /* მობილურზე მენიუ ხდება ფიქსირებული ტაბების სისტემა, რომელიც არ სრიალებს Hero-ს თავზე */
+    .sticky-nav {
+      position: relative; 
+      top: auto;
+      padding: 0.5rem;
+    }
+    
     .nav-inner { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
     .nav-tab { padding: 0.6rem 0.5rem; font-size: 0.82rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(30, 41, 59, 0.4); }
     .nav-tab.active { border-color: var(--lemon); background: rgba(250, 204, 21, 0.08); }
+    
     .tradeoff { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
     .tradeoff-vs { margin-top: 0; }
     .course-row { padding: 0.8rem; gap: 0.6rem; flex-wrap: wrap; }
@@ -396,20 +420,13 @@
   }
 
   @media (max-width: 400px) { .nav-inner { grid-template-columns: 1fr; } }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cursor { animation: none; opacity: 1; }
-    .explore-btn { animation: none; box-shadow: none; }
-    .explore-btn::before { content: none; }
-    .card:hover, .course-row:hover, .tool-item:hover, .career-step:hover { transform: none; }
-  }
 </style>
 </head>
 <body>
 
 <div class="viewport-wrapper" id="global-scroller">
 
-  <section class="hero">
+  <section class="hero" id="hero-viewport">
     <p class="hero-eyebrow">ინფორმატიკისა და მართვის სისტემების ფაკულტეტი · 2026</p>
     <h1>გახდი ის, ვინც<br><span>ააშენებს ხვალინდელს</span></h1>
     <p class="hero-sub">Software Engineering — ეს არ არის მხოლოდ კოდის წერა. <br>ეს არის სისტემების შექმნა, რომლებიც ათასობით ადამიანის ცხოვრებას ყოველდღე ეხება.</p>
@@ -611,18 +628,34 @@
       tab.classList.toggle('active', Object.keys(nodes)[i] === key);
     });
 
-    // თუ მობილურ ეკრანზე ვართ, სქროლი მთლიან ფანჯარაზე სწორდება, ხოლო კომპიუტერზე - შიდა კონტეინერში
+    const navBar = document.getElementById('main-navigation');
+    
     if (window.innerWidth <= 640) {
-      const navBar = document.getElementById('main-navigation');
-      globalScroller.scrollTop = navBar.offsetTop;
+      // მობილურზე, ვინაიდან გლობალური Window სქროლავს, ხედვას ზუსტად ვასწორებთ მენიუს თავზე
+      // გამოიყენება მყისიერი სქროლი, რათა არ მოხდეს ძველი პოზიციის აღდგენა
+      const targetScroll = navBar.offsetTop;
+      if (globalScroller) {
+        globalScroller.scrollTop = targetScroll;
+      } else {
+        window.scrollTo(0, targetScroll);
+      }
     } else {
+      // დესკტოპ ვერსიაზე ვასუფთავებთ მხოლოდ შიდა კონტეინერს
       internalContainer.scrollTop = 0;
     }
   }
 
   function navigateToMenu() {
     const navBar = document.getElementById('main-navigation');
-    globalScroller.scrollTo({ top: navBar.offsetTop, behavior: 'smooth' });
+    if (window.innerWidth <= 640) {
+      if (globalScroller) {
+        globalScroller.scrollTo({ top: navBar.offsetTop, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: navBar.offsetTop, behavior: 'smooth' });
+      }
+    } else {
+      document.getElementById('info-frame').scrollIntoView({ behavior: 'smooth' });
+    }
   }
 </script>
 </body>

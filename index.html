@@ -24,7 +24,7 @@
     --card: rgba(30,41,59,0.7);
   }
 
-  /* დესკტოპზე ვტოვებთ ფიქსირებულ არქიტექტურას, მობილურზე კი სრულად მოქნილს ვხდით */
+  /* გლობალური არქიტექტურა დესკტოპისთვის */
   html, body {
     height: 100%;
     overflow: hidden;
@@ -136,7 +136,7 @@
 
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* ── ანიმირებული ღილაკი ── */
+  /* ── სუპერ ანიმირებული ღილაკი ── */
   .explore-btn {
     background: linear-gradient(135deg, var(--violet) 0%, #6D28D9 100%);
     color: var(--white);
@@ -362,7 +362,7 @@
 
   /* ═══════════ მობილურის ოპტიმიზაციები (ვერტიკალური და ჰორიზონტალური რეჟიმი) ═══════════ */
   @media (max-width: 640px) {
-    /* სრულად ვხსნით Window სქროლის აკრძალვას მობილურებისთვის */
+    /* აბსოლუტური გარანტია: მობილურზე მთლიანად ვშლით ფიქსირებულ სიმაღლეებს და Window სქროლს */
     html, body {
       overflow: auto;
       height: auto;
@@ -373,24 +373,36 @@
       overflow-y: visible;
     }
 
-    /* უმნიშვნელოვანესი ცვლილება: ვუკრძალავთ Hero სექციას მობილურზე ფიქსირებულ სიმაღლეს.
-       ის ხდება სუფთა დინამიკური ('auto'), რათა ჰორიზონტალურ რეჟიმში (პატარა სიმაღლისას)
-       შინაარსი არ გამოვიდეს გარეთ და არ გადაეფაროს ღილაკს. */
+    /* ფუნდამენტური ცვლილება: Hero-ს სიმაღლე ხდება 'auto' (მოქნილი).
+       ეს გამორიცხავს ტექსტებისა და ღილაკის ერთმანეთზე დაჯდომას პატარა ვერტიკალური სივრცის პირობებშიც კი! */
     .hero {
       height: auto;
-      min-height: 100vh;
-      min-height: 100dvh;
-      padding: 3rem 1rem 4rem; /* უზრუნველყოფს უსაფრთხო დაშორებას ღილაკის გარშემო */
+      min-height: unset;
+      padding: 4rem 1rem 3.5rem;
     }
 
-    /* მობილურ ვერსიაზე ტერმინალს და ტექსტებს ოდნავ ვამცირებთ კომპაქტურობისთვის */
-    .terminal {
-      margin-bottom: 1.5rem;
-      padding: 0.8rem 1rem;
+    /* მობილურ ვერსიაზე ტერმინალსა და სათაურებს მივცემთ უფრო კომპაქტურ ზომებს სივრცის მოსაგებად */
+    .hero h1 {
+      font-size: 2.1rem;
+      margin-bottom: 1rem;
     }
 
     .hero-sub {
+      font-size: 0.95rem;
       margin-bottom: 1.5rem;
+    }
+
+    .terminal {
+      margin-bottom: 1.8rem;
+      padding: 0.8rem 1rem;
+    }
+
+    /* ღილაკი ჯდება ბუნებრივად, ყოველგვარი აბსოლუტური ფიქსაციის გარეშე */
+    .explore-btn {
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      width: auto;
+      display: inline-block;
     }
 
     .content-frame {
@@ -401,10 +413,10 @@
     .tab-scroll-viewport {
       overflow-y: visible;
       flex: none;
-      padding: 2rem 1rem 3rem;
+      padding: 2.5rem 1rem 3rem;
     }
 
-    /* მობილურზე ნავიგაცია მიყვება გვერდს ბუნებრივად, ყოველგვარი გადაფარვის რისკის გარეშე */
+    /* მენიუ მობილურზე ხდება ჩვეულებრივი ბლოკი, რომელიც ფიზიკურად ღილაკის ქვემოთ იწყება */
     .sticky-nav {
       position: relative; 
       top: auto;
@@ -639,7 +651,7 @@
     const navBar = document.getElementById('main-navigation');
     
     if (window.innerWidth <= 640) {
-      // მობილურზე ხედვას მყისიერად ვასწორებთ მენიუს დასაწყისზე
+      // მობილურზე ხედვას მყისიერად ვასწორებთ მენიუს საწყის წერტილზე
       const targetScroll = navBar.offsetTop;
       if (globalScroller) {
         globalScroller.scrollTop = targetScroll;

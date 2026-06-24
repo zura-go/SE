@@ -33,6 +33,7 @@
     font-size: 16px;
     line-height: 1.7;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
   }
 
   /* ── HERO ── */
@@ -43,7 +44,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 6rem 2rem 4rem;
+    padding: 4rem 1rem 3rem;
     position: relative;
     overflow: hidden;
   }
@@ -53,27 +54,31 @@
     position: absolute;
     top: -200px; left: 50%;
     transform: translateX(-50%);
-    width: 700px; height: 700px;
+    width: 100%;
+    max-width: 700px; 
+    height: 700px;
     background: radial-gradient(circle, rgba(124,58,237,0.22) 0%, transparent 65%);
     pointer-events: none;
   }
 
   .hero-eyebrow {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
     color: var(--violet-light);
     text-transform: uppercase;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
+    padding: 0 1rem;
   }
 
   .hero h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(2.6rem, 7vw, 5.5rem);
+    font-size: clamp(2.2rem, 6.5vw, 5.5rem);
     font-weight: 700;
-    line-height: 1.05;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
   }
 
   .hero h1 span {
@@ -81,11 +86,12 @@
   }
 
   .hero-sub {
-    font-size: 1.15rem;
+    font-size: clamp(1rem, 3vw, 1.15rem);
     color: var(--muted);
     max-width: 540px;
     margin: 0 auto 2.5rem;
-    line-height: 1.65;
+    line-height: 1.6;
+    padding: 0 1rem;
   }
 
   /* Terminal */
@@ -93,20 +99,21 @@
     background: #0D1117;
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.2rem 1.6rem;
+    padding: 1rem 1.2rem;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.88rem;
+    font-size: clamp(0.78rem, 2.5vw, 0.88rem);
     text-align: left;
-    min-width: 360px;
+    width: 100%;
     max-width: 500px;
-    margin: 0 auto 3rem;
+    margin: 0 auto 2.5rem;
     position: relative;
+    word-break: break-word;
   }
 
   .terminal-bar {
     display: flex;
     gap: 6px;
-    margin-bottom: 0.9rem;
+    margin-bottom: 0.8rem;
   }
 
   .terminal-dot {
@@ -117,7 +124,7 @@
   .terminal-dot:nth-child(2) { background: #FEBC2E; }
   .terminal-dot:nth-child(3) { background: #28C840; }
 
-  .terminal-line { margin-bottom: 0.35rem; }
+  .terminal-line { margin-bottom: 0.5rem; line-height: 1.5; }
   .terminal-line .prompt { color: var(--violet-light); }
   .terminal-line .cmd { color: var(--white); }
   .terminal-line .out { color: #4ADE80; }
@@ -135,12 +142,13 @@
 
   .scroll-hint {
     color: var(--muted);
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-family: 'JetBrains Mono', monospace;
     display: flex;
     align-items: center;
     gap: 8px;
     animation: float 2.5s ease-in-out infinite;
+    margin-top: auto;
   }
 
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
@@ -152,8 +160,9 @@
     z-index: 100;
     background: rgba(15,23,42,0.92);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
+    padding: 0 1rem;
   }
 
   .nav-inner {
@@ -163,6 +172,7 @@
     gap: 0;
     overflow-x: auto;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   .nav-inner::-webkit-scrollbar { display: none; }
@@ -174,24 +184,26 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: 0.88rem;
     font-weight: 500;
-    padding: 1rem 1.2rem;
+    padding: 1rem 1.1rem;
     cursor: pointer;
     white-space: nowrap;
     border-bottom: 2px solid transparent;
     transition: color 0.2s, border-color 0.2s;
+    flex: 1 0 auto;
+    text-align: center;
   }
 
   .nav-tab:hover { color: var(--white); }
   .nav-tab.active { color: var(--lemon); border-bottom-color: var(--lemon); }
 
   /* ── SECTIONS ── */
-  .section { display: none; padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+  .section { display: none; padding: 4rem 1rem; max-width: 900px; margin: 0 auto; }
   .section.visible { display: block; }
 
   .section-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.15em;
     color: var(--violet-light);
     text-transform: uppercase;
     margin-bottom: 0.7rem;
@@ -199,9 +211,9 @@
 
   .section-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.2;
     margin-bottom: 1rem;
     letter-spacing: -0.01em;
   }
@@ -214,22 +226,22 @@
   .section-intro {
     color: var(--muted);
     max-width: 620px;
-    margin-bottom: 3rem;
-    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
   }
 
   /* ── CARDS ── */
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
   }
 
   .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 1.5rem;
+    padding: 1.25rem;
     transition: border-color 0.2s, transform 0.2s;
   }
 
@@ -239,8 +251,8 @@
   }
 
   .card-icon {
-    font-size: 1.6rem;
-    margin-bottom: 0.8rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.6rem;
     display: block;
   }
 
@@ -261,12 +273,12 @@
   /* ── BIG QUOTE ── */
   .big-q {
     border-left: 3px solid var(--violet);
-    padding: 1.5rem 1.8rem;
+    padding: 1.2rem 1.4rem;
     background: var(--violet-glow);
     border-radius: 0 12px 12px 0;
-    margin: 2.5rem 0;
+    margin: 2rem 0;
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.15rem;
+    font-size: clamp(1rem, 2.8vw, 1.15rem);
     font-weight: 500;
     line-height: 1.6;
     color: var(--white);
@@ -279,10 +291,10 @@
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.25rem 1.5rem;
+    padding: 1.25rem;
     display: flex;
     align-items: flex-start;
-    gap: 1.2rem;
+    gap: 1rem;
   }
 
   .tradeoff-vs {
@@ -303,17 +315,16 @@
     font-size: 0.95rem;
     font-weight: 600;
     display: block;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.3rem;
   }
 
-  .tradeoff-text p { font-size: 0.87rem; color: var(--muted); }
+  .tradeoff-text p { font-size: 0.87rem; color: var(--muted); line-height: 1.5; }
 
   /* ── COURSES ── */
   .course-block { margin-bottom: 2.5rem; }
 
   .course-block h3 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1rem;
     font-weight: 600;
     color: var(--violet-light);
     margin-bottom: 1rem;
@@ -325,8 +336,8 @@
   .course-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.85rem 1.2rem;
+    gap: 0.8rem;
+    padding: 0.85rem 1rem;
     border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--card);
@@ -340,20 +351,21 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.78rem;
     color: var(--lemon);
-    min-width: 52px;
+    min-width: 48px;
     text-align: right;
     flex-shrink: 0;
   }
 
   .course-name {
-    font-size: 0.93rem;
+    font-size: 0.9rem;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 500;
+    line-height: 1.4;
   }
 
   .course-tag {
     margin-left: auto;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     padding: 0.2rem 0.55rem;
     border-radius: 20px;
     font-family: 'JetBrains Mono', monospace;
@@ -369,13 +381,13 @@
     flex-direction: column;
     gap: 0;
     position: relative;
-    padding-left: 2rem;
+    padding-left: 1.5rem;
   }
 
   .career-path::before {
     content: '';
     position: absolute;
-    left: 7px;
+    left: 6px;
     top: 20px;
     bottom: 20px;
     width: 2px;
@@ -385,7 +397,7 @@
 
   .career-step {
     position: relative;
-    padding: 1.2rem 1.5rem;
+    padding: 1.2rem;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -398,10 +410,10 @@
   .career-step::before {
     content: '';
     position: absolute;
-    left: -1.7rem;
+    left: -1.45rem;
     top: 1.45rem;
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: var(--violet);
     border: 2px solid var(--navy);
@@ -424,20 +436,20 @@
     margin-bottom: 0.25rem;
   }
 
-  .career-step p { font-size: 0.88rem; color: var(--muted); }
+  .career-step p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
 
   /* ── TOOLS ── */
   .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
   }
 
   .tool-item {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 1rem 1.2rem;
+    padding: 0.9rem 1.1rem;
     display: flex;
     align-items: center;
     gap: 0.8rem;
@@ -466,6 +478,7 @@
     font-size: 0.78rem;
     color: var(--muted);
     margin-top: 0.1rem;
+    line-height: 1.3;
   }
 
   /* ── ASSESSMENT ── */
@@ -483,13 +496,14 @@
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 1rem 1.3rem;
+    padding: 1rem 1.2rem;
   }
 
   .assess-name {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 500;
     font-size: 0.93rem;
+    line-height: 1.4;
   }
 
   .assess-format {
@@ -513,7 +527,7 @@
     background: var(--violet-glow);
     border: 1px solid rgba(124,58,237,0.35);
     border-radius: 12px;
-    padding: 1.25rem 1.5rem;
+    padding: 1.25rem;
     font-size: 0.9rem;
     color: var(--muted);
     line-height: 1.6;
@@ -524,8 +538,8 @@
   /* ── LEGEND ── */
   .legend {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
     flex-wrap: wrap;
   }
 
@@ -541,22 +555,63 @@
   /* ── FOOTER ── */
   footer {
     border-top: 1px solid var(--border);
-    padding: 2.5rem 2rem;
+    padding: 2rem 1rem;
     text-align: center;
     color: var(--muted);
     font-size: 0.82rem;
     font-family: 'JetBrains Mono', monospace;
+    line-height: 1.5;
   }
 
-  footer span { color: var(--violet-light); }
+  footer span { color: var(--violet-light); display: block; margin-bottom: 0.2rem; }
 
-  @media (max-width: 600px) {
-    .hero h1 { font-size: 2.4rem; }
-    .terminal { min-width: unset; width: 100%; }
-    .assess-row { grid-template-columns: 1fr auto; }
-    .assess-format { display: none; }
-    .career-path { padding-left: 1.5rem; }
-    .career-step { padding: 1rem; }
+  /* ═══════════ MOBILE OPTIMIZATIONS (MEDIA QUERIES) ═══════════ */
+  @media (max-width: 640px) {
+    .hero { padding: 3rem 1rem 2rem; }
+    
+    /* Sticky Nav Mobile: კურირებული ორსვეტიანი განლაგება */
+    .sticky-nav { padding: 0.5rem; }
+    .nav-inner {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem;
+    }
+    .nav-tab {
+      padding: 0.6rem 0.5rem;
+      font-size: 0.82rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.4);
+    }
+    .nav-tab.active {
+      border-color: var(--lemon);
+      background: rgba(250, 204, 21, 0.08);
+    }
+    
+    /* Tradeoffs სექციის ადაპტაცია */
+    .tradeoff { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .tradeoff-vs { margin-top: 0; }
+
+    /* კურსების თეგების სწორება */
+    .course-row { padding: 0.8rem; gap: 0.6rem; flex-wrap: wrap; }
+    .course-tag { margin-left: unset; }
+    .course-name { width: 100%; order: -1; } /* სათაური ადის თავში */
+    .course-hours { text-align: left; min-width: auto; }
+
+    /* შეფასების სვეტების სტრუქტურა */
+    .assess-row {
+      grid-template-columns: 1fr auto;
+      gap: 0.4rem;
+      padding: 1rem;
+    }
+    .assess-name { grid-column: span 2; }
+    .assess-format { text-align: left; font-size: 0.75rem; }
+    .assess-pct { font-size: 1rem; }
+  }
+
+  @media (max-width: 400px) {
+    /* ექსტრემალურად მცირე ეკრანებისთვის ნავიგაცია ხდება სრულად ვერტიკალური */
+    .nav-inner { grid-template-columns: 1fr; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -568,11 +623,10 @@
 </head>
 <body>
 
-<!-- ═══════════ HERO ═══════════ -->
 <section class="hero">
   <p class="hero-eyebrow">ინფორმატიკისა და მართვის სისტემების ფაკულტეტი · 2026</p>
   <h1>გახდი ის, ვინც<br><span>ააშენებს ხვალინდელს</span></h1>
-  <p class="hero-sub">Software Engineering — ეს არ არის მხოლოდ კოდის წერა. <br>ეს არის სისტემების შექმნა, რომლებიც <br>ათასობით ადამიანის ცხოვრებას ყოველდღე ეხება.</p>
+  <p class="hero-sub">Software Engineering — ეს არ არის მხოლოდ კოდის წერა. <br>ეს არის სისტემების შექმნა, რომლებიც ათასობით ადამიანის ცხოვრებას ყოველდღე ეხება.</p>
 
   <div class="terminal" aria-label="ტერმინალის სიმულაცია">
     <div class="terminal-bar">
@@ -589,7 +643,6 @@
   <div class="scroll-hint">↓ გადაახვიე ქვემოთ ...</div>
 </section>
 
-<!-- ═══════════ NAV ═══════════ -->
 <nav class="sticky-nav" role="navigation" aria-label="სექციების ნავიგაცია">
   <div class="nav-inner">
     <button class="nav-tab active" onclick="showSection('who')">ვინ ვარ?</button>
@@ -600,14 +653,13 @@
   </div>
 </nav>
 
-<!-- ═══════════ SECTION: ვინ ვარ ═══════════ -->
 <div class="section visible" id="sec-who">
   <p class="section-label">01 · იდენტობა</p>
   <h2 class="section-title">Software Engineer —<br>ის, ვინც <em>ქმნის</em></h2>
-  <p class="section-intro">Software Engineer ქმნის პროგრამულ სისტემებს — ისეთებს, რომლებიც <br>არა მხოლოდ მუშაობს, არამედ ხარისხსაც ინარჩუნებს და იზრდება.</p>
+  <p class="section-intro">Software Engineer ქმნის პროგრამულ სისტემებს — ისეთებს, რომლებიც არა მხოლოდ მუშაობს, არამედ ხარისხსაც ინარჩუნებს და იზრდება.</p>
 
   <div class="big-q">
-    «როგორ ავაშენოთ სისტემა ისე, რომ მომხმარებელი კმაყოფილი დარჩეს, <br>კოდი სხვა პროგრამისტმაც გაიგოს, და ხვალ — ვითარდებოდეს?»
+    «როგორ ავაშენოთ სისტემა ისე, რომ მომხმარებელი კმაყოფილი დარჩეს, კოდი სხვა პროგრამისტმაც გაიგოს, და ხვალ — ვითარდებოდეს?»
   </div>
 
   <div class="card-grid">
@@ -619,7 +671,7 @@
     <div class="card">
       <span class="card-icon">🤝</span>
       <h3>მუშაობ გუნდში</h3>
-      <p>კოდი ერთობლივი პასუხისმგებლობაა. <br>Code Review, PR-ები, Agile <br>— ეს SE-ის კულტურაა.</p>
+      <p>კოდი ერთობლივი პასუხისმგებლობაა. Code Review, PR-ები, Agile — ეს SE-ის კულტურაა.</p>
     </div>
     <div class="card">
       <span class="card-icon">🔭</span>
@@ -629,7 +681,7 @@
     <div class="card">
       <span class="card-icon">⚖️</span>
       <h3>აბალანსებ კომპრომისებს</h3>
-      <p>სიჩქარე ↔ ხარისხი. <br>სიმარტივე ↔ მოქნილობა. <br>ეს SE-ის ნამდვილი გამოწვევაა.</p>
+      <p>სიჩქარე ↔ ხარისხი. სიმარტივე ↔ მოქნილობა. ეს SE-ის ნამდვილი გამოწვევაა.</p>
     </div>
   </div>
 
@@ -660,11 +712,10 @@
   </div>
 </div>
 
-<!-- ═══════════ SECTION: ვისწავლი ═══════════ -->
 <div class="section" id="sec-learn">
   <p class="section-label">02 · კურიკულუმი</p>
   <h2 class="section-title">რას <em>ვისწავლი?</em></h2>
-  <p class="section-intro">კურსები ლოგიკური ჯაჭვით ერთმანეთს ემყარება — <br>ფუნდამენტიდან სპეციალიზებამდე, კაფსტოუნ პროექტამდე.</p>
+  <p class="section-intro">კურსები ლოგიკური ჯაჭვით ერთმანეთს ემყარება — ფუნდამენტიდან სპეციალიზებამდე, კაფსტოუნ პროექტამდე.</p>
 
   <div class="course-block">
     <h3>📐 ფუნდამენტური საგნები</h3>
@@ -739,11 +790,10 @@
   </div>
 </div>
 
-<!-- ═══════════ SECTION: სად ვიმუშავებ ═══════════ -->
 <div class="section" id="sec-work">
   <p class="section-label">03 · კარიერა</p>
   <h2 class="section-title">სად <em>ვიმუშავებ?</em></h2>
-  <p class="section-intro">SE ყველაზე ჰორიზონტალური სპეციალიზაციაა — <br>პრაქტიკულად ნებისმიერი კომპანია, <br>რომელსაც ციფრული პროდუქტი აქვს.</p>
+  <p class="section-intro">SE ყველაზე ჰორიზონტალური სპეციალიზაციაა — პრაქტიკულად ნებისმიერი კომპანია, რომელსაც ციფრული პროდუქტი აქვს.</p>
 
   <div class="card-grid" style="margin-bottom:3rem;">
     <div class="card">
@@ -789,11 +839,10 @@
   </div>
 </div>
 
-<!-- ═══════════ SECTION: ინსტრუმენტები ═══════════ -->
 <div class="section" id="sec-tools">
   <p class="section-label">04 · ტექნოლოგიები</p>
   <h2 class="section-title">რითი <em>ვიმუშავებ?</em></h2>
-  <p class="section-intro">სავალდებულო ინსტრუმენტები — ყველას უნდა დაეუფლო. <br>რეკომენდებულები — უნარების გასაღრმავებლად.</p>
+  <p class="section-intro">სავალდებულო ინსტრუმენტები — ყველას უნდა დაეუფლო. რეკომენდებულები — უნარების გასაღრმავებლად.</p>
 
   <div class="legend">
     <div class="legend-item"><span class="tool-dot dot-required" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span>სავალდებულო</div>
@@ -844,11 +893,10 @@
   </div>
 </div>
 
-<!-- ═══════════ SECTION: შეფასება ═══════════ -->
 <div class="section" id="sec-assess">
   <p class="section-label">05 · შეფასება</p>
   <h2 class="section-title">როგორ <em>შემაფასებენ?</em></h2>
-  <p class="section-intro">შეფასება ასახავს რეალურ SE-ის სამუშაოს — <br>პროექტი, კოლაბორაცია, გადაწყვეტილებების დასაბუთება.</p>
+  <p class="section-intro">შეფასება ასახავს რეალურ SE-ის სამუშაოს — პროექტი, კოლაბორაცია, გადაწყვეტილებების დასაბუთება.</p>
 
   <div class="assess-grid">
     <div class="assess-row">
@@ -883,9 +931,8 @@
   </div>
 </div>
 
-<!-- ═══════════ FOOTER ═══════════ -->
 <footer>
-  <span></span>IT · სპეციალიზაცია Software Engineering · 2026
+  <span>IT · სპეციალიზაცია Software Engineering</span> ფაკულტეტი · 2026
 </footer>
 
 <script>
@@ -929,6 +976,7 @@
     document.querySelectorAll('.nav-tab').forEach((tab, i) => {
       tab.classList.toggle('active', Object.keys(sections)[i] === key);
     });
+    // სექციაზე გადასვლისას მობილურზეც კორექტულად ცენტრირდება ნავიგაცია
     document.querySelector('.sticky-nav').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 </script>

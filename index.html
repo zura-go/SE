@@ -362,7 +362,7 @@
 
   /* ═══════════ მობილურის ოპტიმიზაციები (ვერტიკალური და ჰორიზონტალური რეჟიმი) ═══════════ */
   @media (max-width: 640px) {
-    /* სრულიად ვხსნით Window სქროლის აკრძალვას მობილურებისთვის */
+    /* სრულად ვხსნით Window სქროლის აკრძალვას მობილურებისთვის */
     html, body {
       overflow: auto;
       height: auto;
@@ -381,6 +381,16 @@
       min-height: 100vh;
       min-height: 100dvh;
       padding: 3rem 1rem 4rem; /* უზრუნველყოფს უსაფრთხო დაშორებას ღილაკის გარშემო */
+    }
+
+    /* მობილურ ვერსიაზე ტერმინალს და ტექსტებს ოდნავ ვამცირებთ კომპაქტურობისთვის */
+    .terminal {
+      margin-bottom: 1.5rem;
+      padding: 0.8rem 1rem;
+    }
+
+    .hero-sub {
+      margin-bottom: 1.5rem;
     }
 
     .content-frame {
@@ -418,13 +428,6 @@
   }
 
   @media (max-width: 400px) { .nav-inner { grid-template-columns: 1fr; } }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cursor { animation: none; opacity: 1; }
-    .explore-btn { animation: none; box-shadow: none; }
-    .explore-btn::before { content: none; }
-    .card:hover, .course-row:hover, .tool-item:hover, .career-step:hover { transform: none; }
-  }
 </style>
 </head>
 <body>
@@ -636,7 +639,7 @@
     const navBar = document.getElementById('main-navigation');
     
     if (window.innerWidth <= 640) {
-      // მობილურზე, ვინაიდან გვერდი დინამიკურია, ხედვას მყისიერად ვასწორებთ მენიუს საწყის წერტილზე
+      // მობილურზე ხედვას მყისიერად ვასწორებთ მენიუს დასაწყისზე
       const targetScroll = navBar.offsetTop;
       if (globalScroller) {
         globalScroller.scrollTop = targetScroll;

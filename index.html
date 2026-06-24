@@ -24,7 +24,7 @@
     --card: rgba(30,41,59,0.7);
   }
 
-  /* დესკტოპზე ვტოვებთ ფიქსირებულ არქიტექტურას, ხოლო მობილურზე CSS-ით სრულად გადავაწყობთ */
+  /* დესკტოპზე ვტოვებთ ფიქსირებულ არქიტექტურას, მობილურზე კი სრულად მოქნილს ვხდით */
   html, body {
     height: 100%;
     overflow: hidden;
@@ -151,6 +151,7 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
     animation: 
       buttonPulse 2.5s infinite ease-in-out,
       textGlow 3s infinite ease-in-out;
@@ -162,9 +163,7 @@
     box-shadow: 0 0 30px rgba(124, 58, 237, 0.6);
   }
 
-  .explore-btn:active {
-    transform: translateY(-1px) scale(0.99);
-  }
+  .explore-btn:active { transform: translateY(-1px) scale(0.99); }
 
   .explore-btn::before {
     content: '';
@@ -173,12 +172,7 @@
     left: -150%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(258, 258, 258, 0.25),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(258, 258, 258, 0.25), transparent);
     transform: skewX(-30deg);
     animation: shimmerEffect 4.5s infinite linear;
   }
@@ -199,7 +193,7 @@
     50% { color: rgba(255, 255, 255, 1); text-shadow: 0 0 8px rgba(255,255,255,0.6); }
   }
 
-  /* ── ქვედა ეკრანის სტრუქტურა ── */
+  /* ── კონტენტის ჩარჩო ── */
   .content-frame {
     height: 100vh;
     height: 100dvh;
@@ -324,7 +318,7 @@
   .course-block h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--violet-light); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.82rem; }
   .course-row { display: flex; align-items: center; gap: 0.8rem; padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card); margin-bottom: 0.6rem; transition: border-color 0.2s; }
   .course-row:hover { border-color: var(--violet); }
-  .course-hours { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--lemon); min-width: 80px; text-align: right; flex-shrink: 0; }
+  .course-hours { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--lemon); min-width: 140px; text-align: right; flex-shrink: 0; }
   .course-name { font-size: 0.9rem; font-family: 'Space Grotesk', sans-serif; font-weight: 500; line-height: 1.4; }
   .course-tag { margin-left: auto; font-size: 0.68rem; padding: 0.2rem 0.55rem; border-radius: 20px; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
   .tag-core { background: rgba(124,58,237,0.25); color: var(--violet-light); }
@@ -366,9 +360,9 @@
   footer { border-top: 1px solid var(--border); padding: 2rem 1rem; text-align: center; color: var(--muted); font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; line-height: 1.5; }
   footer span { color: var(--violet-light); display: block; margin-bottom: 0.2rem; }
 
-  /* ═══════════ მობილურის ოპტიმიზაციები (აბსოლუტური გარანტია) ═══════════ */
+  /* ═══════════ მობილურის ოპტიმიზაციები (ვერტიკალური და ჰორიზონტალური რეჟიმი) ═══════════ */
   @media (max-width: 640px) {
-    /* ძირეული ცვლილება: მობილურზე ვხსნით Window-ს სქროლის აკრძალვას, რათა გვერდმა ჩვეულებრივად იაროს ქვემოთ */
+    /* სრულიად ვხსნით Window სქროლის აკრძალვას მობილურებისთვის */
     html, body {
       overflow: auto;
       height: auto;
@@ -379,10 +373,14 @@
       overflow-y: visible;
     }
 
-    /* Hero სექცია მობილურზე იკავებს სუფთა 100%-ს, ხოლო Content Frame ჯდება მის ქვემოთ, ყოველგვარი გადაფარვის გარეშე */
+    /* უმნიშვნელოვანესი ცვლილება: ვუკრძალავთ Hero სექციას მობილურზე ფიქსირებულ სიმაღლეს.
+       ის ხდება სუფთა დინამიკური ('auto'), რათა ჰორიზონტალურ რეჟიმში (პატარა სიმაღლისას)
+       შინაარსი არ გამოვიდეს გარეთ და არ გადაეფაროს ღილაკს. */
     .hero {
-      height: 100vh;
-      height: 100dvh;
+      height: auto;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 3rem 1rem 4rem; /* უზრუნველყოფს უსაფრთხო დაშორებას ღილაკის გარშემო */
     }
 
     .content-frame {
@@ -396,7 +394,7 @@
       padding: 2rem 1rem 3rem;
     }
 
-    /* მობილურზე მენიუ ხდება ფიქსირებული ტაბების სისტემა, რომელიც არ სრიალებს Hero-ს თავზე */
+    /* მობილურზე ნავიგაცია მიყვება გვერდს ბუნებრივად, ყოველგვარი გადაფარვის რისკის გარეშე */
     .sticky-nav {
       position: relative; 
       top: auto;
@@ -420,6 +418,13 @@
   }
 
   @media (max-width: 400px) { .nav-inner { grid-template-columns: 1fr; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+    .explore-btn { animation: none; box-shadow: none; }
+    .explore-btn::before { content: none; }
+    .card:hover, .course-row:hover, .tool-item:hover, .career-step:hover { transform: none; }
+  }
 </style>
 </head>
 <body>
@@ -631,8 +636,7 @@
     const navBar = document.getElementById('main-navigation');
     
     if (window.innerWidth <= 640) {
-      // მობილურზე, ვინაიდან გლობალური Window სქროლავს, ხედვას ზუსტად ვასწორებთ მენიუს თავზე
-      // გამოიყენება მყისიერი სქროლი, რათა არ მოხდეს ძველი პოზიციის აღდგენა
+      // მობილურზე, ვინაიდან გვერდი დინამიკურია, ხედვას მყისიერად ვასწორებთ მენიუს საწყის წერტილზე
       const targetScroll = navBar.offsetTop;
       if (globalScroller) {
         globalScroller.scrollTop = targetScroll;
@@ -640,7 +644,7 @@
         window.scrollTo(0, targetScroll);
       }
     } else {
-      // დესკტოპ ვერსიაზე ვასუფთავებთ მხოლოდ შიდა კონტეინერს
+      // დესკტოპზე ვასუფთავებთ შიდა კონტეინერის ვერტიკალურ სქროლს
       internalContainer.scrollTop = 0;
     }
   }

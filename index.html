@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ინფორმატიკისა და მართვის სისტემების ფაკულტეტი — Software Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    color-scheme: dark;
+    forced-color-adjust: none;
+    --navy: #0F172A;
+    --navy-mid: #1E293B;
+    --navy-light: #334155;
+    --violet: #8B5CF6;
+    --violet-light: #C4B5FD;
+    --violet-glow: rgba(139, 92, 246, 0.35);
+    --lemon: #FACC15;
+    --lemon-dim: rgba(250, 204, 21, 0.2);
+    --white: #F8FAFC;
+    --muted: #CBD5E1;
+    --border: rgba(139, 92, 246, 0.3);
+    --card: #1E293BE6;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .viewport-wrapper {
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 750px; 
+    height: 750px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0.1) 45%, rgba(15, 23, 42, 0) 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--violet-light);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.2rem, 6.5vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 span { 
+    color: var(--lemon); 
+    text-shadow: 0 0 18px rgba(250, 204, 21, 0.4);
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 3vw, 1.15rem);
+    color: var(--muted);
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+  }
+
+  /* Terminal */
+  .terminal {
+    background: #090D16;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.78rem, 2.5vw, 0.88rem);
+    text-align: left;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    position: relative;
+    word-break: break-word;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.2);
+  }
+
+  .terminal-bar { display: flex; gap: 6px; margin-bottom: 0.8rem; }
+  .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .terminal-dot:nth-child(1) { background: #FF5F57; }
+  .terminal-dot:nth-child(2) { background: #FEBC2E; }
+  .terminal-dot:nth-child(3) { background: #28C840; }
+
+  .terminal-line { margin-bottom: 0.5rem; line-height: 1.5; }
+  .terminal-line .prompt { color: var(--violet-light); }
+  .terminal-line .cmd { color: var(--white); }
+  .terminal-line .out { color: #4ADE80; }
+  .terminal-line .comment { color: var(--muted); }
+
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--lemon);
+    vertical-align: -2px;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ── ანიმირებული ღილაკი ── */
+  .explore-btn {
+    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    color: var(--white);
+    border: 1px solid #C4B5FD;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0.95rem 2.2rem;
+    border-radius: 30px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+    animation: 
+      buttonPulse 2.5s infinite ease-in-out,
+      textGlow 3s infinite ease-in-out;
+  }
+
+  .explore-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    border-color: #DDD6FE;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+  }
+
+  .explore-btn:active {
+    transform: translateY(-1px) scale(0.99);
+  }
+
+  .explore-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -150%;
+    width: 50%; height: 100%;
+    /* 258 შეიცვალა ვალიდური 255-ით */
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0));
+    transform: skewX(-30deg);
+    animation: shimmerEffect 4.5s infinite linear;
+  }
+
+  @keyframes buttonPulse {
+    0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.6), 0 0 0 0 rgba(196, 181, 253, 0.4); }
+    50% { box-shadow: 0 0 0 15px rgba(124, 58, 237, 0), 0 0 0 25px rgba(196, 181, 253, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0), 0 0 0 0 rgba(196, 181, 253, 0); }
+  }
+
+  @keyframes shimmerEffect {
+    0% { left: -150%; }
+    25%, 100% { left: 150%; }
+  }
+
+  @keyframes textGlow {
+    0%, 100% { color: #F8FAFC; text-shadow: 0 0 2px rgba(255,255,255,0.4); }
+    50% { color: #FFFFFF; text-shadow: 0 0 8px rgba(255,255,255,0.8); }
+  }
+
+  /* ── ქვედა ეკრანის სტრუქტურა ── */
+  .content-frame {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--navy);
+  }
+
+  /* ── NAV ── */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 23, 42, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    flex-shrink: 0;
+  }
+
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-inner::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 1.2rem 1.1rem;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    flex: 1 0 auto;
+    text-align: center;
+  }
+
+  .nav-tab:hover { color: var(--white); }
+  .nav-tab.active { 
+    color: var(--lemon); 
+    border-bottom-color: var(--lemon); 
+    text-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+  }
+
+  /* ── შიდა სქროლვადი კონტეინერი კონტენტისთვის ── */
+  .tab-scroll-viewport {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 3rem 1rem 4rem;
+  }
+
+  .tab-content-node { display: none; max-width: 900px; margin: 0 auto; }
+  .tab-content-node.active-node { display: block; }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--violet-light);
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .section-title em { 
+    font-style: normal; 
+    color: var(--lemon); 
+    text-shadow: 0 0 12px rgba(250, 204, 21, 0.3);
+  }
+
+  .section-intro {
+    color: var(--muted);
+    max-width: 620px;
+    margin-bottom: 2.5rem;
+    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+  }
+
+  /* ── CARDS ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .card { 
+    background: var(--card); 
+    border: 1px solid var(--border); 
+    border-radius: 14px; 
+    padding: 1.25rem; 
+    transition: all 0.25s ease; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  .card:hover { 
+    border-color: var(--violet); 
+    transform: translateY(-3px); 
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  .card-icon { font-size: 1.5rem; margin-bottom: 0.6rem; display: block; }
+  .card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--white); }
+  .card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── BIG QUOTE ── */
+  .big-q {
+    border-left: 4px solid var(--violet);
+    padding: 1.2rem 1.4rem;
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.25) 0%, rgba(30, 41, 59, 0.5) 100%);
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-radius: 0 12px 12px 0;
+    margin: 2rem 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1rem, 2.8vw, 1.15rem);
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--white);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+  }
+
+  /* ── TRADEOFFS ── */
+  .tradeoff-list { display: flex; flex-direction: column; gap: 1rem; }
+  .tradeoff { 
+    background: var(--card); 
+    border: 1px solid var(--border); 
+    border-radius: 12px; 
+    padding: 1.25rem; 
+    display: flex; 
+    align-items: flex-start; 
+    gap: 1rem; 
+  }
+  .tradeoff-vs { 
+    background: var(--lemon-dim); 
+    color: var(--lemon); 
+    border: 1px solid rgba(250, 204, 21, 0.35); 
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+    padding: 0.25rem 0.6rem; 
+    border-radius: 6px; 
+    white-space: nowrap; 
+    margin-top: 2px; 
+    flex-shrink: 0; 
+  }
+  .tradeoff-text strong { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600; display: block; margin-bottom: 0.3rem; }
+  .tradeoff-text p { font-size: 0.87rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── COURSES ── */
+  .course-block { margin-bottom: 2.5rem; }
+  .course-block h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--violet-light); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.82rem; }
+  .course-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.8rem; 
+    padding: 0.85rem 1rem; 
+    border-radius: 10px; 
+    border: 1px solid var(--border); 
+    background: var(--card); 
+    margin-bottom: 0.6rem; 
+    transition: all 0.2s; 
+  }
+  .course-row:hover { border-color: var(--violet); box-shadow: 0 0 12px rgba(139, 92, 246, 0.25); }
+  .course-hours { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--lemon); min-width: 80px; text-align: right; flex-shrink: 0; }
+  .course-name { font-size: 0.9rem; font-family: 'Space Grotesk', sans-serif; font-weight: 500; line-height: 1.4; }
+  .course-tag { margin-left: auto; font-size: 0.68rem; padding: 0.2rem 0.55rem; border-radius: 20px; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+  .tag-core { background: rgba(139, 92, 246, 0.25); color: var(--violet-light); border: 1px solid rgba(139, 92, 246, 0.4); }
+  .tag-cap  { background: rgba(250, 204, 21, 0.2); color: var(--lemon); border: 1px solid rgba(250, 204, 21, 0.4); }
+
+  /* ── CAREER ── */
+  .career-path { display: flex; flex-direction: column; gap: 0; position: relative; padding-left: 1.5rem; }
+  .career-path::before { content: ''; position: absolute; left: 6px; top: 20px; bottom: 20px; width: 2px; background: linear-gradient(to bottom, var(--violet), var(--lemon)); border-radius: 2px; }
+  .career-step { position: relative; padding: 1.2rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1rem; transition: border-color 0.2s; }
+  .career-step:hover { border-color: var(--violet); }
+  .career-step::before { content: ''; position: absolute; left: -1.45rem; top: 1.45rem; width: 12px; height: 12px; border-radius: 50%; background: var(--violet); border: 2px solid var(--navy); box-shadow: 0 0 10px var(--violet); }
+  .career-step:last-child::before { background: var(--lemon); box-shadow: 0 0 10px var(--lemon); }
+  .career-level { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.3rem; }
+  .career-step h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .career-step p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── TOOLS ── */
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; }
+  .tool-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; display: flex; align-items: center; gap: 0.8rem; transition: border-color 0.2s; }
+  .tool-item:hover { border-color: var(--violet); }
+  .tool-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-required { background: var(--lemon); box-shadow: 0 0 8px var(--lemon); }
+  .dot-rec { background: var(--violet-light); box-shadow: 0 0 8px var(--violet-light); }
+  .tool-name { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 600; color: var(--white); }
+  .tool-desc { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; line-height: 1.3; }
+
+  /* ── ASSESSMENT ── */
+  .assess-grid { display: flex; flex-direction: column; gap: 0.8rem; }
+  .assess-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
+  .assess-name { font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 0.93rem; line-height: 1.4; }
+  .assess-format { font-size: 0.78rem; color: var(--muted); text-align: right; white-space: nowrap; }
+  .assess-pct { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; color: var(--lemon); min-width: 42px; text-align: right; }
+  .ai-note { margin-top: 2rem; background: linear-gradient(90deg, rgba(139, 92, 246, 0.25) 0%, rgba(30, 41, 59, 0.6) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+  .ai-note strong { color: var(--violet-light); }
+
+  .legend { display: flex; gap: 1.2rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  footer { border-top: 1px solid var(--border); padding: 2rem 1rem; text-align: center; color: var(--muted); font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; line-height: 1.5; }
+  footer span { color: var(--violet-light); display: block; margin-bottom: 0.2rem; }
+
+  /* ═══════════ მობილურის ოპტიმიზაციები და ღილაკის მოცილება ═══════════ */
+  @media (max-width: 640px) {
+    .explore-btn {
+      display: none !important;
+    }
+
+    html, body {
+      overflow: auto !important;
+      height: auto !important;
+    }
+
+    .viewport-wrapper {
+      height: auto !important;
+      overflow-y: visible !important;
+    }
+
+    .hero {
+      height: auto !important;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 4rem 1rem;
+    }
+
+    .content-frame {
+      height: auto !important;
+      overflow: visible !important;
+    }
+
+    .tab-scroll-viewport {
+      overflow-y: visible !important;
+      flex: none !important;
+      padding: 2.5rem 1rem 3rem;
+    }
+
+    .sticky-nav {
+      position: sticky !important;
+      top: 0 !important;
+      padding: 0.5rem;
+    }
+
+    .nav-inner { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
+    .nav-tab { padding: 0.6rem 0.5rem; font-size: 0.82rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(30, 41, 59, 0.7); }
+    .nav-tab.active { border-color: var(--lemon); background: rgba(250, 204, 21, 0.15); }
+    
+    .tradeoff { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .tradeoff-vs { margin-top: 0; }
+    .course-row { padding: 0.8rem; gap: 0.6rem; flex-wrap: wrap; }
+    .course-tag { margin-left: unset; }
+    .course-name { width: 100%; order: -1; } 
+    .course-hours { text-align: left; min-width: auto; }
+    .assess-row { grid-template-columns: 1fr auto; gap: 0.4rem; padding: 1rem; }
+    .assess-name { grid-column: span 2; }
+    .assess-format { text-align: left; font-size: 0.75rem; }
+    .assess-pct { font-size: 1rem; }
+  }
+
+  @media (max-width: 400px) { .nav-inner { grid-template-columns: 1fr; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+    .explore-btn { animation: none; box-shadow: none; }
+    .explore-btn::before { content: none; }
+    .card:hover, .course-row:hover, .tool-item:hover, .career-step:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="viewport-wrapper" id="global-scroller">
+
+  <section class="hero">
+    <p class="hero-eyebrow">ინფორმატიკისა და მართვის სისტემების ფაკულტეტი · 2026</p>
+    <h1>გახდი ის, ვინც<br><span>ააშენებს ხვალინდელს</span></h1>
+    <p class="hero-sub">Software Engineering — ეს არ არის მხოლოდ კოდის წერა. <br>ეს არის სისტემების შექმნა, რომლებიც ათასობით ადამიანის ცხოვრებას ყოველდღე ეხება.</p>
+
+    <div class="terminal" aria-label="ტერმინალის სიმულაცია">
+      <div class="terminal-bar">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+      </div>
+      <div class="terminal-line"><span class="prompt">~/project $ </span><span class="cmd" id="typed-cmd"></span><span class="cursor" id="cursor"></span></div>
+      <div class="terminal-line" id="term-out-1" style="opacity:0"><span class="out">✓ tests passed (127/127)</span></div>
+      <div class="terminal-line" id="term-out-2" style="opacity:0"><span class="out">✓ build successful</span></div>
+      <div class="terminal-line" id="term-out-3" style="opacity:0"><span class="comment"># შენი კოდი ახლა პროგრამულ პროდუქტშია, <br># ხოლო ეგ შენი პროდუქტი - მომხმარებელთანაა! 🚀</span></div>
+    </div>
+
+    <button class="explore-btn" onclick="navigateToMenu()">განვიხილოთ დეტალურად!</button>
+  </section>
+
+  <div class="content-frame" id="info-frame">
+    
+    <nav class="sticky-nav" id="main-navigation" role="navigation" aria-label="სექციების ნავიგაცია">
+      <div class="nav-inner">
+        <button class="nav-tab active" onclick="showSection('who')">ვინ ვარ?</button>
+        <button class="nav-tab" onclick="showSection('learn')">რას ვისწავლი?</button>
+        <button class="nav-tab" onclick="showSection('work')">სად ვიმუშავებ?</button>
+        <button class="nav-tab" onclick="showSection('tools')">ინსტრუმენტები</button>
+        <button class="nav-tab" onclick="showSection('assess')">შეფასება</button>
+      </div>
+    </nav>
+
+    <main class="tab-scroll-viewport" id="tab-internal-viewport">
+
+      <div class="tab-content-node active-node" id="node-who">
+        <p class="section-label">01 · იდენტობა</p>
+        <h2 class="section-title">Software Engineer —<br>ის, ვინც <em>ქმნის</em></h2>
+        <p class="section-intro">Software Engineer ქმნის პროგრამულ სისტემებს — ისეთებს, რომლებიც არა მხოლოდ მუშაობს, არამედ ხარისხსაც ინარჩუნებს და იზრდება.</p>
+
+        <div class="big-q">«როგორ ავაშენოთ სისტემა ისე, რომ მომხმარებელი კმაყოფილი დარჩეს, კოდი სხვა პროგრამისტმაც გაიგოს, და ხვალ — ვითარდებოდეს?»</div>
+
+        <div class="card-grid">
+          <div class="card"><span class="card-icon">🏗️</span><h3>აშენებ და ინარჩუნებ</h3><p>ყოველდღიურად იღებ ინჟინრულ გადაწყვეტილებებს, სადაც სრულყოფილი პასუხი ყოველთვის არ არსებობს.</p></div>
+          <div class="card"><span class="card-icon">🤝</span><h3>მუშაობ გუნდში</h3><p>კოდი ერთობლივი პასუხისმგებლობაა. Code Review, PR-ები, Agile — ეს Software Engineering კულტურაა.</p></div>
+          <div class="card"><span class="card-icon">🔭</span><h3>ფიქრობ კონტექსტით</h3><p>ერთი და იგივე გადაწყვეტილება სხვადასხვა პროექტში სხვადასხვა პასუხისმგებლობაზე გადის.</p></div>
+          <div class="card"><span class="card-icon">⚖️</span><h3>აბალანსებ კომპრომისებს</h3><p>სიჩქარე ↔ ხარისხი. სიმარტივე ↔ მოქნილობა. ეს Software Engineering ნამდვილი გამოწვევაა.</p></div>
+        </div>
+
+        <p class="section-label" style="margin-top:3rem;">რეალური კომპრომისები</p>
+        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:600;margin-bottom:1.5rem;">Software Engineering ყოველდღიური გადასაჭრელი</h3>
+        <div class="tradeoff-list">
+          <div class="tradeoff"><div class="tradeoff-vs">სიჩქარე ↔ ხარისხი</div><div class="tradeoff-text"><strong>«გამოუშვი სწრაფად» vs «გამოუშვი სწორად»</strong><p>ბაზარი სიჩქარეს ითხოვს. სწრაფი გამოშვება ხარისხობრივ დავალიანებას ტოვებს, რომელიც შემდეგ ორმაგი ძალისხმევით სწორდება.</p></div></div>
+          <div class="tradeoff"><div class="tradeoff-vs">სიმარტივე ↔ მოქნილობა</div><div class="tradeoff-text"><strong>მარტივი სისტემა vs ყველაფრისთვის მზა სისტემა</strong><p>მარტივი — ადვილად გასაგებია, ახალ მოთხოვნებს ვერ ეგუება. მოქნილი — ყველაფერს ეგუება, მაგრამ რთულია.</p></div></div>
+          <div class="tradeoff"><div class="tradeoff-vs">ახლა ↔ მომავალი</div><div class="tradeoff-text"><strong>«ახლა გამოვიდეს» vs «მომავალში გაფართოვდეს»</strong><p>ვინც ყოველთვის «მომავლისთვის» წერს — ნელია. ვინც მხოლოდ «ახლანდელისთვის» — მოვალეა.</p></div></div>
+        </div>
+      </div>
+
+      <div class="tab-content-node" id="node-learn">
+        <p class="section-label">02 · კურიკულუმი (13 სასწავლო კვირა)</p>
+        <h2 class="section-title">რას <em>რას ვისწავლი?</em></h2>
+        <p class="section-intro">კურსები ლოგიკური ჯაჭვით ერთმანეტს ემყარება — ფუნდამენტიდან სპეციალიზებამდე, კაფსტოუნ პროექტამდე.</p>
+
+        <div class="course-block">
+          <h3>📐 ფუნდამენტური საგნები</h3>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">ალგორითმები და მონაცემთა სტრუქტურები</span></div>
+          <div class="course-row"><span class="course-hours">6 ECTS</span><span class="course-name">პროგრამირების საფუძვლები</span></div>
+          <div class="course-row"><span class="course-hours">10 ECTS</span><span class="course-name">საინჟინრო და დისკრეტული მათემატიკა</span></div>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">ობიექტ-ორიენტირებული დაპროგრამება</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">4 ECTS</span><span class="course-name">ოპერაციული სისტემები</span></div>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">მონაცემთა ბაზების საფუძვლები</span></div>
+          <div class="course-row"><span class="course-hours">6 ECTS</span><span class="course-name">ვებ-პროგრამირების საფუძვლები(HTML5/CSS3/JavaScript)</span></div>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">ქსელები და ინფრასტრუქტურა</span></div>
+          <div class="course-row"><span class="course-hours">3 ECTS</span><span class="course-name">AI-ის შესაძლებლობები და შეზღუდვები</span></div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:rgba(139,92,246,0.6);display:inline-block;"></span>ძირეული კურსი</div>
+          <div class="legend-item"><span style="width:10px;height:10px;border-radius:2px;background:rgba(250,204,21,0.6);display:inline-block;"></span>კაფსტოუნი</div>
+        </div>
+
+        <div class="course-block">
+          <h3>🚀 სპეციალიზებული კურსები</h3>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">პროგრამული არქიტექტურა</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">4 ECTS</span><span class="course-name">დიზაინ-პატერნები</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">მობილური დეველოპმენტი</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">10 ECTS</span><span class="course-name">JavaScript/TypeScript Full-Stack</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">10 ECTS</span><span class="course-name">Java/.NET კორპორაციული დეველოპმენტი</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">DevOps და CI/CD ავტომატიზაცია</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">პროგრამის ხარისხი და ტესტირება</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">6 ECTS</span><span class="course-name">Software Engineering (Agile, CI/CD, Code Review)</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">5 ECTS</span><span class="course-name">პროგრამული ინჟინერიის AI-საფუძვლები</span><span class="course-tag tag-core">ძირეული</span></div>
+          <div class="course-row"><span class="course-hours">18 ECTS</span><span class="course-name">კაფსტოუნ პროექტი — რეალური სისტემის სრული ციკლი</span><span class="course-tag tag-cap">კაფსტოუნი</span></div>
+        </div>
+      </div>
+
+      <div class="tab-content-node" id="node-work">
+        <p class="section-label">03 · კარიერა</p>
+        <h2 class="section-title">სად <em>ვიმუშავებ?</em></h2>
+        <p class="section-intro">Software Engineering ყველაზე ჰორიზონტალური სპეციალიზაციაა — პრაქტიკულად ნებისმიერი კომპანია, რომელსაც ციფრული პროდუქტი აქვს.</p>
+
+        <div class="card-grid" style="margin-bottom:3rem;">
+          <div class="card"><span class="card-icon">🏦</span><h3>Fintech</h3><p>კოდის ხარისხი = ფინანსური სანდოობა. ყველა ტრანზაქცია შენს კოდზე გადის.</p></div>
+          <div class="card"><span class="card-icon">🏥</span><h3>HealthTech</h3><p>კოდის ხარისხი = პაციენტის უსაფრთხოება. პასუხისმგებლობა ყველაზე მაღალია.</p></div>
+          <div class="card"><span class="card-icon">🌐</span><h3>ნებისმიერი სფერო</h3><p>სტარტაპი, Enterprise, სახელმწიფო სექტორი — ყველას Software Engineer სჭირდება.</p></div>
+        </div>
+
+        <p class="section-label">კარიერული ბილიკი</p>
+        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:600;margin-bottom:1.8rem;">Junior-დან Staff Engineer-მდე</h3>
+
+        <div class="career-path">
+          <div class="career-step"><div class="career-level">Entry · 0–2 წელი</div><h3>Junior Software Engineer</h3><p>მზა ამოცანების განხორციელება, Code Review-ში მონაწილეობა, ძირეული უნარების გამყარება.</p></div>
+          <div class="career-step"><div class="career-level">Mid · 3–6 წელი</div><h3>Software Engineer</h3><p>დამოუკიდებელი ფუნქციების შემუშავება, Junior ინჟინრების მენტორობა.</p></div>
+          <div class="career-step"><div class="career-level">Senior · 7+ წელი</div><h3>Senior / Staff Engineer</h3><p>არქიტექტურული გადაწყვეტილებები. ან — Engineering Manager: გუნდების ლიდერობა.</p></div>
+        </div>
+
+        <div class="big-q" style="margin-top:2.5rem;">ხელოვნური ინტელექტის კონტექსტში მარტივი კოდის წერა სულ უფრო ავტომატიზირდება — <strong>სიღრმე, არქიტექტურა და სისტემური განსჯა კი წინა პლანზე გამოდის.</strong></div>
+      </div>
+
+      <div class="tab-content-node" id="node-tools">
+        <p class="section-label">04 · ტექნოლოგიები</p>
+        <h2 class="section-title">რითი <em>ვიმუშავებ?</em></h2>
+        <p class="section-intro">სავალდებულო ინსტრუმენტები — ყველას უნდა დაეუფლო. რეკომენდებულები — უნარების გასაღრმავებლად.</p>
+
+        <div class="legend">
+          <div class="legend-item"><span class="tool-dot dot-required" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span>სავალდებულო</div>
+          <div class="legend-item"><span class="tool-dot dot-rec" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span>რეკომენდებული</div>
+        </div>
+
+        <div class="tools-grid">
+          <div class="tool-item"><span class="tool-dot dot-required"></span><div><div class="tool-name">Python / Java / C++</div><div class="tool-desc">ძირეული სასწავლო ენა</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-required"></span><div><div class="tool-name">Git / GitHub</div><div class="tool-desc">ვერსიების კონტროლი</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-required"></span><div><div class="tool-name">SQL</div><div class="tool-desc">მონაცემთა ბაზები</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-required"></span><div><div class="tool-name">Docker</div><div class="tool-desc">კონტეინერიზაცია</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-required"></span><div><div class="tool-name">pytest / JUnit</div><div class="tool-desc">ავტომატური ტესტირება</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-required"></span><div><div class="tool-name">GitHub Actions</div><div class="tool-desc">CI/CD pipeline</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-required"></span><div><div class="tool-name">AI Coding Tools</div><div class="tool-desc">Cursor, Claude Code...</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-rec"></span><div><div class="tool-name">Kubernetes</div><div class="tool-desc">კონტეინერების ორკესტრაცია</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-rec"></span><div><div class="tool-name">TypeScript</div><div class="tool-desc">Frontend / Full Stack</div></div></div>
+          <div class="tool-item"><span class="tool-dot dot-rec"></span><div><div class="tool-name">Redis</div><div class="tool-desc">Cache, სესიების მართვა</div></div></div>
+        </div>
+      </div>
+
+      <div class="tab-content-node" id="node-assess">
+        <p class="section-label">05 · შეფასება (13-კვირიანი სემესტრი)</p>
+        <h2 class="section-title">როგორ <em>შემაფასებენ?</em></h2>
+        <p class="section-intro">შეფასება ასახავს რეალურ Software Engineering სამუშაოს — პროექტი, კოლაბორაცია, გადაწყვეტილებების დასაბუთება.</p>
+
+        <div class="assess-grid">
+          <div class="assess-row"><div class="assess-name">კაფსტოუნ პროექტი</div><div class="assess-format">გუნდური · სემესტრული (13 კვირა)</div><div class="assess-pct">40%</div></div>
+          <div class="assess-row"><div class="assess-name">Code Review — კოლეგის კოდის ანალიზი</div><div class="assess-format">სემესტრში სულ 6-ჯერ</div><div class="assess-pct">20%</div></div>
+          <div class="assess-row"><div class="assess-name">სისტემის დიზაინის დაცვა</div><div class="assess-format">ინდივიდუალურად · 30 წუთი</div><div class="assess-pct">20%</div></div>
+          <div class="assess-row"><div class="assess-name">Git პროცესი — commits, PR-ები, CI/CD</div><div class="assess-format">ავტომატურად + ხელით</div><div class="assess-pct">10%</div></div>
+          <div class="assess-row"><div class="assess-name">ტექნიკური პრეზენტაცია</div><div class="assess-format">ინდივიდუალური</div><div class="assess-pct">10%</div></div>
+        </div>
+
+        <div class="ai-note"><strong>ხელოვნური ინტელექტის გამოყენებაზე:</strong> AI-assisted კოდი აკრძალული <em>არ არის</em> — ეფექტურად გამოყენება დღევანდელ სინამდვილეს ასახავს. მაგრამ Code Review-სა და სისტემის დიზაინის დაცვაზე მოგეკითხება: <strong>«ეს კოდი რატომ ასეა დაწერილი?»</strong> — ამ კითხვაზე პასუხი ხელოვნური ინტელექტისგან ვერ მიიღება.</div>
+      </div>
+
+      <footer>
+        <span>IT · სპეციალიზაცია Software Engineering</span> ფაკულტეტი · 2026
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  // ── Terminal typewriter ──
+  const commands = [{ cmd: 'git commit -m "feat: add payment module"', delay: 60 }];
+  let cmdIndex = 0, charIndex = 0;
+  const typedEl = document.getElementById('typed-cmd');
+  const cursorEl = document.getElementById('cursor');
+
+  function typeChar() {
+    const cmd = commands[cmdIndex].cmd;
+    if (charIndex < cmd.length) {
+      typedEl.textContent += cmd[charIndex];
+      charIndex++;
+      setTimeout(typeChar, commands[cmdIndex].delay);
+    } else {
+      cursorEl.style.display = 'none';
+      setTimeout(showOutputs, 400);
+    }
+  }
+
+  function showOutputs() {
+    ['term-out-1','term-out-2','term-out-3'].forEach((id, i) => {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if(el) { el.style.opacity = '1'; el.style.transition = 'opacity 0.4s'; }
+      }, i * 500);
+    });
+  }
+  setTimeout(typeChar, 800);
+
+  // ── ტაბების გადართვის ლოგიკა ──
+  const nodes = { who: 'node-who', learn: 'node-learn', work: 'node-work', tools: 'node-tools', assess: 'node-assess' };
+  const internalContainer = document.getElementById('tab-internal-viewport');
+
+  function showSection(key) {
+    Object.values(nodes).forEach(id => document.getElementById(id).classList.remove('active-node'));
+    document.getElementById(nodes[key]).classList.add('active-node');
+    
+    document.querySelectorAll('.nav-tab').forEach((tab, i) => {
+      tab.classList.toggle('active', Object.keys(nodes)[i] === key);
+    });
+
+    if (window.innerWidth <= 640) {
+      const navBar = document.getElementById('main-navigation');
+      const scroller = document.getElementById('global-scroller');
+      if (scroller) {
+        scroller.scrollTop = navBar.offsetTop;
+      } else {
+        window.scrollTo(0, navBar.offsetTop);
+      }
+    } else {
+      internalContainer.scrollTop = 0;
+    }
+  }
+
+  function navigateToMenu() {
+    document.getElementById('info-frame').scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
